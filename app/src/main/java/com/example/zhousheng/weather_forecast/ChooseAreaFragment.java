@@ -225,9 +225,6 @@ public class ChooseAreaFragment extends Fragment
                     });
                 }
             }
-
-
-            }
         });
     }
 
