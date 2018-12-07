@@ -164,7 +164,7 @@ public class ChooseAreaFragment extends Fragment
     private void showProgressDialog() {
         if (progressDialog == null) {
             progressDialog = new ProgressDialog(getActivity());
-            progressDialog.setMessage("正在加载...");
+            progressDialog.setMessage("正在加载....");
             progressDialog.setCanceledOnTouchOutside(false);
         }
         progressDialog.show();
@@ -186,6 +186,18 @@ public class ChooseAreaFragment extends Fragment
     private void queryFromServer(String address, final String type) {
         showProgressDialog();
         HttpUtil.sendOkHttpRequest(address, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                // 通过runOnUiThread()方法回到主线程处理逻辑
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        closeProgressDialog();
+                        Toast.makeText(getContext(), "加载已失败", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+            }
 
             public void onResponse(Call call, Response response) throws IOException {
                 String responseText = response.body().string();
@@ -214,16 +226,7 @@ public class ChooseAreaFragment extends Fragment
                 }
             }
 
-            @Override
-            public void onFailure(Call call, IOException e) {
-                // 通过runOnUiThread()方法回到主线程处理逻辑
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        closeProgressDialog();
-                        Toast.makeText(getContext(), "加载失败", Toast.LENGTH_SHORT).show();
-                    }
-                });
+
             }
         });
     }
