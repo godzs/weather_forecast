@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.zhousheng.weather_forecast">
-
+<uses-permission android:name="android.permission.INTERNET"/>
     <application
         android:name="org.litepal.LitePalApplication"
         android:allowBackup="true"
@@ -18,9 +18,6 @@
             </intent-filter>
         </activity>
 
-        <meta-data
-            android:name="com.google.android.actions"
-            android:resource="@xml/litepal.xml" />
     </application>
 
 </manifest>
