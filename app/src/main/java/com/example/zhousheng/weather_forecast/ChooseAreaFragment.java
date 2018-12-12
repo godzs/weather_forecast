@@ -21,7 +21,6 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
-
 import com.example.zhousheng.weather_forecast.db.City;
 import com.example.zhousheng.weather_forecast.db.County;
 import com.example.zhousheng.weather_forecast.db.Province;
