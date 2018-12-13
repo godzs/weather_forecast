@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -33,11 +34,11 @@ public class WeatherActivity extends AppCompatActivity {
 
     public DrawerLayout drawerLayout;
 
+    private Button navButton;
+
     public SwipeRefreshLayout swipeRefresh;
 
     private ScrollView weatherLayout;
-
-    private Button navButton;
 
     private TextView titleCity;
 
@@ -98,6 +99,18 @@ public class WeatherActivity extends AppCompatActivity {
         String weatherString = prefs.getString("weather", null);
         bingPicImg=(ImageView)findViewById(R.id.bing_pic_img);
         String bingPic=prefs.getString("bing_pic",null);
+
+        drawerLayout=(DrawerLayout)findViewById(R.id.drawer_layout);
+        navButton=(Button)findViewById(R.id.nav_button);
+        navButton.setOnClickListener(new View.OnClickListener()
+                                     {
+
+                                         @Override
+                                         public void onClick(View v) {
+                                             drawerLayout.openDrawer(GravityCompat.START);
+                                         }
+                                     });
+
         if(bingPic!=null)
         {
             Glide.with(this).load(bingPic).into(bingPicImg);

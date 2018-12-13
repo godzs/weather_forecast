@@ -22,6 +22,7 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
+import com.example.zhousheng.weather_forecast.Gson.Weather;
 import com.example.zhousheng.weather_forecast.db.City;
 import com.example.zhousheng.weather_forecast.db.County;
 import com.example.zhousheng.weather_forecast.db.Province;
@@ -83,10 +84,20 @@ public class ChooseAreaFragment extends Fragment
                 else if(currentLevel==LEVEL_COUNTY)
                 {
                     String weatherId=countyList.get(position).getWeatherId();
-                    Intent intent=new Intent(getActivity(),WeatherActivity.class);
-                    intent.putExtra("weather_id",weatherId);
-                    startActivity(intent);
-                    getActivity().finish();
+                    if(getActivity() instanceof MainActivity) {
+                        Intent intent = new Intent(getActivity(), WeatherActivity.class);
+                        intent.putExtra("weather_id", weatherId);
+                        startActivity(intent);
+                        getActivity().finish();
+                    }
+                    else if(getActivity() instanceof WeatherActivity)
+                    {
+                        WeatherActivity activity=(WeatherActivity)getActivity();
+                        activity.drawerLayout.closeDrawers();
+                        activity.swipeRefresh.setRefreshing(true);
+                        activity.requestWeather(weatherId);
+
+                    }
                 }
             }
 
