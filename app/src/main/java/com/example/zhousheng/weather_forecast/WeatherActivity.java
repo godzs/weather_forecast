@@ -1,5 +1,6 @@
 package com.example.zhousheng.weather_forecast;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
@@ -21,6 +22,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.zhousheng.weather_forecast.Gson.Forecast;
 import com.example.zhousheng.weather_forecast.Gson.Weather;
+import com.example.zhousheng.weather_forecast.service.AutoUpdateService;
 import com.example.zhousheng.weather_forecast.util.HttpUtil;
 import com.example.zhousheng.weather_forecast.util.Utility;
 
@@ -246,8 +248,8 @@ public class WeatherActivity extends AppCompatActivity {
         carWashText.setText(carWash);
         sportText.setText(sport);
         weatherLayout.setVisibility(View.VISIBLE);
-        //Intent intent = new Intent(this, AutoUpdateService.class);
-        //startService(intent);
+        Intent intent = new Intent(this, AutoUpdateService.class);
+        startService(intent);
     }
 
 }
