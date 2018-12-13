@@ -3,7 +3,6 @@ package com.example.zhousheng.weather_forecast;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.v4.view.GravityCompat;
@@ -269,8 +268,8 @@ public void changeImag(String weatherInfo)
 {
     if(weatherInfo.equals("晴"))
     {
-        Glide.with(this).load(R.mipmap.yellow).into(bingPicImg);
-        Glide.with(this).load(R.mipmap.cond_icon_100).into(sun);
+        Glide.with(this).load(R.mipmap.sun1).into(bingPicImg);
+        Glide.with(this).load(R.mipmap.sun_imag).into(sun);
 
     }
     else if(weatherInfo.equals("阴"))
@@ -281,7 +280,7 @@ public void changeImag(String weatherInfo)
     }
     else if(weatherInfo.equals("多云"))
     {
-        Glide.with(this).load(R.mipmap.tint_grey).into(bingPicImg);
+        Glide.with(this).load(R.mipmap.tiny).into(bingPicImg);
         Glide.with(this).load(R.mipmap.cloud).into(sun);
     }
     else if(weatherInfo.equals("霾"))
