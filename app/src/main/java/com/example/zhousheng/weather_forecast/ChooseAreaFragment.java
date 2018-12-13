@@ -216,7 +216,6 @@ public class ChooseAreaFragment extends Fragment
                 });
 
             }
-
             public void onResponse(Call call, Response response) throws IOException {
                 String responseText = response.body().string();
                 boolean result = false;

@@ -3,6 +3,7 @@ package com.example.zhousheng.weather_forecast;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.v4.view.GravityCompat;
@@ -54,6 +55,10 @@ public class WeatherActivity extends AppCompatActivity {
 
     private TextView aqiText;
 
+    private TextView sun_begin;
+
+    private TextView sun_out;
+
     private TextView pm25Text;
 
     private TextView comfortText;
@@ -68,7 +73,10 @@ public class WeatherActivity extends AppCompatActivity {
 
     public String mWeatherId;
 
-    //private String mWeatherId;
+    public String bingPic;
+
+    public ImageView sun;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,11 +104,11 @@ public class WeatherActivity extends AppCompatActivity {
         sportText = (TextView) findViewById(R.id.sport_text);
         swipeRefresh=(SwipeRefreshLayout)findViewById(R.id.swipe_refresh);
         swipeRefresh.setColorSchemeResources(R.color.colorPrimary);
-
+        sun=(ImageView)findViewById(R.id.sun);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         String weatherString = prefs.getString("weather", null);
         bingPicImg=(ImageView)findViewById(R.id.bing_pic_img);
-        String bingPic=prefs.getString("bing_pic",null);
+         bingPic=prefs.getString("bing_pic",null);
 
         drawerLayout=(DrawerLayout)findViewById(R.id.drawer_layout);
         navButton=(Button)findViewById(R.id.nav_button);
@@ -113,14 +121,16 @@ public class WeatherActivity extends AppCompatActivity {
                                          }
                                      });
 
-        if(bingPic!=null)
+       if(bingPic!=null)
         {
+
             Glide.with(this).load(bingPic).into(bingPicImg);
         }
         else
         {
             loadBingPic();
         }
+
         if (weatherString != null) {
             // 有缓存时直接解析天气数据
             Weather weather = Utility.handleWeatherResponse(weatherString);
@@ -161,6 +171,7 @@ public class WeatherActivity extends AppCompatActivity {
                             editor.apply();
                             mWeatherId=weather.basic.weatherId;
                             showWeatherInfo(weather);
+
                         } else {
                             Toast.makeText(WeatherActivity.this, "获取天气信息失败", Toast.LENGTH_SHORT).show();
                         }
@@ -223,6 +234,7 @@ public class WeatherActivity extends AppCompatActivity {
         titleUpdateTime.setText(updateTime);
         degreeText.setText(degree);
         weatherInfoText.setText(weatherInfo);
+       changeImag(weatherInfo);
         forecastLayout.removeAllViews();
         for (Forecast forecast : weather.forecastList) {
             View view = LayoutInflater.from(this).inflate(R.layout.forecast_item, forecastLayout, false);
@@ -231,15 +243,17 @@ public class WeatherActivity extends AppCompatActivity {
             TextView maxText = (TextView) view.findViewById(R.id.max_text);
             TextView minText = (TextView) view.findViewById(R.id.min_text);
             dateText.setText(forecast.date);
-            System.out.println(forecast.date);
             infoText.setText(forecast.more.info);
             maxText.setText(forecast.temperature.max);
             minText.setText(forecast.temperature.min);
             forecastLayout.addView(view);
         }
+
         if (weather.aqi != null) {
             aqiText.setText(weather.aqi.city.aqi);
             pm25Text.setText(weather.aqi.city.pm25);
+
+
         }
         String comfort = "舒适度：" + weather.suggestion.comfort.info;
         String carWash = "洗车指数：" + weather.suggestion.carWash.info;
@@ -251,5 +265,49 @@ public class WeatherActivity extends AppCompatActivity {
         Intent intent = new Intent(this, AutoUpdateService.class);
         startService(intent);
     }
+public void changeImag(String weatherInfo)
+{
+    if(weatherInfo.equals("晴"))
+    {
+        Glide.with(this).load(R.mipmap.yellow).into(bingPicImg);
+        Glide.with(this).load(R.mipmap.cond_icon_100).into(sun);
 
+    }
+    else if(weatherInfo.equals("阴"))
+    {
+
+        Glide.with(this).load(R.mipmap.grey).into(bingPicImg);
+        Glide.with(this).load(R.mipmap.cast).into(sun);
+    }
+    else if(weatherInfo.equals("多云"))
+    {
+        Glide.with(this).load(R.mipmap.tint_grey).into(bingPicImg);
+        Glide.with(this).load(R.mipmap.cloud).into(sun);
+    }
+    else if(weatherInfo.equals("霾"))
+    {
+        Glide.with(this).load(R.mipmap.fog).into(bingPicImg);
+        Glide.with(this).load(R.mipmap.fog_imag).into(sun);
+    }
+    else if(weatherInfo.equals("小雪"))
+    {
+        Glide.with(this).load(R.mipmap.snow).into(bingPicImg);
+        Glide.with(this).load(R.mipmap.small_snow).into(sun);
+    }
+    else if(weatherInfo.equals("中雪"))
+    {
+        Glide.with(this).load(R.mipmap.snow).into(bingPicImg);
+        Glide.with(this).load(R.mipmap.middle_snow).into(sun);
+    }
+    else if(weatherInfo.equals("大雪"))
+    {
+        Glide.with(this).load(R.mipmap.snow).into(bingPicImg);
+        Glide.with(this).load(R.mipmap.big_snow).into(sun);
+    }
+    else
+    {
+        Glide.with(this).load(bingPic).into(bingPicImg);
+        Glide.with(this).load("#0000").into(sun);          //去掉天气符号
+    }
+}
 }
