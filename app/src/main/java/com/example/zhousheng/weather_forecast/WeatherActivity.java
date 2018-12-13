@@ -15,6 +15,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.zhousheng.weather_forecast.Gson.Forecast;
 import com.example.zhousheng.weather_forecast.Gson.Weather;
 import com.example.zhousheng.weather_forecast.util.HttpUtil;
@@ -56,7 +57,7 @@ public class WeatherActivity extends AppCompatActivity {
 
     private TextView sportText;
 
-   // private ImageView bingPicImg;
+    private ImageView bingPicImg;
 
     //private String mWeatherId;
 
@@ -78,6 +79,16 @@ public class WeatherActivity extends AppCompatActivity {
         sportText = (TextView) findViewById(R.id.sport_text);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         String weatherString = prefs.getString("weather", null);
+        bingPicImg=(ImageView)findViewById(R.id.bing_pic_img);
+        String bingPic=prefs.getString("bing_pic",null);
+        if(bingPic!=null)
+        {
+            Glide.with(this).load(bingPic).into(bingPicImg);
+        }
+        else
+        {
+            loadBingPic();
+        }
         if (weatherString != null) {
             // 有缓存时直接解析天气数据
             Weather weather = Utility.handleWeatherResponse(weatherString);
@@ -130,6 +141,36 @@ public class WeatherActivity extends AppCompatActivity {
         });
     }
 
+
+    /**
+     * 加载每日一图
+     */
+    private void loadBingPic()
+    {
+        String requestBingPic="http://guolin.tech/api/bing_pic";
+        HttpUtil.sendOkHttpRequest(requestBingPic, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                final String bingPic=response.body().string();
+                SharedPreferences.Editor editor=PreferenceManager.getDefaultSharedPreferences(WeatherActivity.this).edit();
+                editor.putString("bing_pic",bingPic);
+                editor.apply();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Glide.with(WeatherActivity.this).load(bingPic).into(bingPicImg);
+                    }
+                });
+
+            }
+        });
+    }
+
     /**
      * 处理并展示Weather实体类中的数据。
      */
@@ -150,6 +191,7 @@ public class WeatherActivity extends AppCompatActivity {
             TextView maxText = (TextView) view.findViewById(R.id.max_text);
             TextView minText = (TextView) view.findViewById(R.id.min_text);
             dateText.setText(forecast.date);
+            System.out.println(forecast.date);
             infoText.setText(forecast.more.info);
             maxText.setText(forecast.temperature.max);
             minText.setText(forecast.temperature.min);
